@@ -1,9 +1,12 @@
 package lcj.jpa;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+
 import lcj.jpa.entity.Member;
 import lcj.jpa.entity.MemberType;
 import lcj.jpa.entity.Team;
@@ -11,7 +14,7 @@ import lcj.jpa.entity.Team;
 public class LcjMain {
 	
 	public static void main(String[] args) {
-		//hello´Â persistance.xml persistence-unit name
+		//helloï¿½ï¿½ persistance.xml persistence-unit name
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
 		
 		EntityManager em=  emf.createEntityManager();
@@ -21,22 +24,34 @@ public class LcjMain {
 		try{
 			Team team = new Team();
 			team.setName("TeamA");
-			em.persist(team);
 			
 			Member member = new Member();
-			member.setName("ÀÌÃ¢ÁØ");
+			member.setName("ì´ì°½ì¤€");
 			member.setAge(31);
 			member.setMemberType(MemberType.ADMIN);
+			member.setTeam(team);
+			
+			Member member1 = new Member();
+			member1.setName("ì´ì°½");
+			member1.setAge(32);
+			member1.setMemberType(MemberType.ADMIN);
+			member1.setTeam(team);
+			
+			em.persist(team);
 			em.persist(member);
+			em.persist(member1);
+			
+			em.flush();
+			em.clear();
 			 
-			
 			Member findMember = em.find(Member.class, member.getId());
-			System.out.println("¸ÕÀú :" +findMember.getAge());
 			
-			findMember.setAge(33);
+			List<Member> list = findMember.getTeam().getMembers();
 			
-			Member findMember1 = em.find(Member.class, member.getId());
-			System.out.println("2¹øÂ° :" +findMember.getAge());
+			for(Member members : list) {
+				System.out.println(members.toString());
+			}
+			System.out.println("íŒ€ì´ë¦„ : "+findMember.getTeam().getName());
 			
 			tx.commit();
 		} catch(Exception e){

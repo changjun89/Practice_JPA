@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,10 +33,11 @@ public class Member {
 //	@Column(name="TEAM_Id")
 //	private Long teamId;
 	
-	@ManyToOne
+	//속단해서 최적화 하지 말자 .. 일단 lazy로 하고 최적화 해가도록 하자
+	@ManyToOne(fetch = FetchType.LAZY)
+	//@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="TEAM_ID")
 	private Team team;
-	
 
 	public Long getId() {
 		return id;
@@ -86,6 +88,12 @@ public class Member {
 		this.team = team;
 	}
 
+	@Override
+	public String toString() {
+		return "Member [id=" + id + ", name=" + name + ", age=" + age + ", memberType=" + memberType + ", contents="
+				+ contents + ", team=" + team + "]";
+	}
+
 //	public Long getTeamId() {
 //		return teamId;
 //	}
@@ -93,7 +101,7 @@ public class Member {
 //	public void setTeamId(Long teamId) {
 //		this.teamId = teamId;
 //	}
-
+	
 	
 		
 }
